@@ -57,3 +57,13 @@
     color:red;
     font-size:34px;
 }
+.reveal{
+    opacity:0;
+    transform:translateY(50px);
+    transition:1s;
+}
+
+.stage.opened .reveal{
+    opacity:1;
+    transform:translateY(0);
+}
