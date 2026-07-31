@@ -1,78 +1,100 @@
-const stage = document.getElementById('stage');
-const starsEl = document.getElementById('stars');
-const rainEl = document.getElementById('rain');
-const envelopeWrap = document.getElementById('envelopeWrap');
-const headingWrap = document.getElementById('headingWrap');
-const subline = document.getElementById('subline');
-const floatWrap = document.getElementById('floatHearts');
-const replayBtn = document.getElementById('replayBtn');
+// Elements
+const stage = document.getElementById("stage");
+const envelope = document.getElementById("envelopeWrap");
+const replay = document.getElementById("replayBtn");
+const floatHearts = document.getElementById("floatHearts");
 
-const rainChars = ['&#10084;&#65039;', '&#128153;', '&#10024;'];
+// Open Envelope
+envelope.addEventListener("click", () => {
 
-function buildStars() {
-  starsEl.innerHTML = '';
-  for (let i = 0; i < 26; i++) {
-    const s = document.createElement('span');
-    s.style.left = Math.random() * 100 + '%';
-    s.style.top = Math.random() * 55 + '%';
-    s.style.animationDelay = (Math.random() * 3) + 's';
-    starsEl.appendChild(s);
-  }
+    if(stage.classList.contains("opened")) return;
+
+    stage.classList.add("opened");
+
+    createHearts();
+
+});
+
+// Replay Button
+replay.addEventListener("click", () => {
+
+    stage.classList.remove("opened");
+
+    floatHearts.innerHTML = "";
+
+});
+
+// Floating Hearts
+function createHearts(){
+
+    floatHearts.innerHTML="";
+
+    const emojis=["❤️","💖","💕","💘","💝","🌹","✨"];
+
+    for(let i=0;i<35;i++){
+
+        let heart=document.createElement("div");
+
+        heart.className="fheart";
+
+        heart.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
+
+        heart.style.left=Math.random()*100+"%";
+
+        heart.style.fontSize=(18+Math.random()*20)+"px";
+
+        heart.style.animationDuration=(3+Math.random()*3)+"s";
+
+        heart.style.animationDelay=(Math.random()*2)+"s";
+
+        floatHearts.appendChild(heart);
+
+        setTimeout(()=>{
+            heart.remove();
+        },6000);
+
+    }
+
 }
 
-function buildRain() {
-  rainEl.innerHTML = '';
-  const count = 22;
-  for (let i = 0; i < count; i++) {
-    const d = document.createElement('div');
-    d.className = 'drop';
-    d.innerHTML = rainChars[Math.floor(Math.random() * rainChars.length)];
-    d.style.left = Math.random() * 100 + '%';
-    d.style.fontSize = (10 + Math.random() * 12) + 'px';
-    d.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
-    const duration = 6 + Math.random() * 6;
-    d.style.animationDuration = duration + 's';
-    d.style.animationDelay = (Math.random() * duration) + 's';
-    rainEl.appendChild(d);
-  }
+// Create Background Stars
+const stars=document.getElementById("stars");
+
+for(let i=0;i<40;i++){
+
+    let star=document.createElement("span");
+
+    star.style.left=Math.random()*100+"%";
+
+    star.style.top=Math.random()*100+"%";
+
+    star.style.animationDelay=Math.random()*4+"s";
+
+    stars.appendChild(star);
+
 }
 
-function burstHearts() {
-  let count = 0;
-  const timer = setInterval(() => {
-    const h = document.createElement('div');
-    h.className = 'fheart';
-    const chars = ['&#10084;&#65039;', '&#128153;', '&#10024;'];
-    h.innerHTML = chars[Math.floor(Math.random() * chars.length)];
-    h.style.left = (30 + Math.random() * 40) + '%';
-    h.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
-    h.style.animationDuration = (2.6 + Math.random() * 1.4) + 's';
-    floatWrap.appendChild(h);
-    setTimeout(() => h.remove(), 4200);
-    count++;
-    if (count > 16) clearInterval(timer);
-  }, 180);
+// Falling Hearts Background
+const rain=document.getElementById("rain");
+
+const icons=["❤️","💖","✨"];
+
+for(let i=0;i<30;i++){
+
+    let drop=document.createElement("div");
+
+    drop.className="drop";
+
+    drop.innerHTML=icons[Math.floor(Math.random()*icons.length)];
+
+    drop.style.left=Math.random()*100+"%";
+
+    drop.style.animationDuration=(5+Math.random()*5)+"s";
+
+    drop.style.animationDelay=Math.random()*5+"s";
+
+    drop.style.fontSize=(15+Math.random()*12)+"px";
+
+    rain.appendChild(drop);
+
 }
-
-function openEnvelope() {
-  if (envelopeWrap.classList.contains('opened')) return;
-  stage.classList.add('opened');
-  envelopeWrap.classList.add('opened');
-  subline.classList.add('hide');
-  setTimeout(burstHearts, 1900);
-}
-
-function resetAll() {
-  stage.classList.remove('opened');
-  envelopeWrap.classList.remove('opened');
-  subline.classList.remove('hide');
-  floatWrap.innerHTML = '';
-  buildStars();
-  buildRain();
-}
-
-envelopeWrap.addEventListener('click', openEnvelope);
-replayBtn.addEventListener('click', resetAll);
-
-buildStars();
-buildRain();
